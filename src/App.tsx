@@ -164,7 +164,16 @@ function App() {
     );
   }, [filteredTemplates, selectedId]);
 
-  const featuredTemplates = useMemo(() => templates.filter((item) => item.featured), []);
+  const featuredTemplates = useMemo(() => {
+    const hasActiveFilters = source !== "All" || category !== "All" || normalizedQuery.length > 0 || onlySaved;
+    const scopedFeatured = filteredTemplates.filter((item) => item.featured);
+
+    if (hasActiveFilters) {
+      return scopedFeatured.length > 0 ? scopedFeatured : filteredTemplates.slice(0, 4);
+    }
+
+    return templates.filter((item) => item.featured);
+  }, [category, filteredTemplates, normalizedQuery, onlySaved, source]);
 
   const sourcePacks = useMemo(() => {
     return templateSources.map((item) => {

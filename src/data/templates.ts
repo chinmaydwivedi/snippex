@@ -73,6 +73,11 @@ export const templateSources: TemplateSource[] = [
     note: "ACL usage skeletons for official DSU, Fenwick, segtree, lazy segtree, flow, and convolution.",
   },
   {
+    name: "Priyansh Agarwal",
+    kind: "Influence",
+    note: "Self-contained contest shell with utility helpers, modular power, and clean single-file flow.",
+  },
+  {
     name: "Teja-Smart",
     kind: "Influence",
     note: "Minimal fast C++23 shell focused on short implementation, direct state, and contest speed.",
