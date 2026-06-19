@@ -175,9 +175,11 @@ a {
   min-width: 0;
 }
 
-.source-nav a {
+.source-nav a,
+.source-nav button {
   padding: 11px 14px;
   border: 2px solid transparent;
+  background: transparent;
   color: var(--paper-2);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.78rem;
@@ -186,7 +188,8 @@ a {
   white-space: nowrap;
 }
 
-.source-nav a:hover {
+.source-nav a:hover,
+.source-nav button:hover {
   border-color: var(--paper-2);
   background: var(--paper-2);
   color: var(--void);
@@ -227,13 +230,13 @@ main {
 
 .hero-band::after {
   position: absolute;
-  top: 0;
+  top: clamp(44px, 4.2vw, 58px);
   left: 0;
-  width: min(44vw, 720px);
-  height: 146px;
+  width: clamp(340px, 30vw, 480px);
+  height: 58px;
   content: "";
   background: var(--void);
-  clip-path: polygon(0 0, 100% 0, 100% 72%, 78% 72%, 78% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 74%, 82% 74%, 82% 100%, 0 100%);
 }
 
 .hero-pixels {
@@ -252,21 +255,23 @@ main {
 }
 
 .hero-pixels span:nth-child(1) {
-  top: 12%;
-  left: 7%;
+  top: 14%;
+  left: 8%;
   background: var(--blue);
 }
 
 .hero-pixels span:nth-child(2) {
-  top: 15%;
-  left: min(46vw, 660px);
+  top: 9%;
+  left: auto;
+  right: 42%;
   width: 72px;
   height: 72px;
 }
 
 .hero-pixels span:nth-child(3) {
-  top: 7%;
-  left: 54%;
+  top: 6%;
+  left: auto;
+  right: 38%;
   width: 64px;
 }
 
@@ -333,20 +338,7 @@ main {
   font-size: 0.82rem;
   font-weight: 900;
   text-transform: uppercase;
-  box-shadow: 7px 7px 0 var(--void);
-}
-
-.eyebrow::before {
-  position: absolute;
-  top: -26px;
-  left: 34px;
-  z-index: -1;
-  width: 90px;
-  height: 26px;
-  border: 3px solid var(--line);
-  border-bottom: 0;
-  background: var(--blue);
-  content: "";
+  box-shadow: 6px 6px 0 var(--void);
 }
 
 .hero-copy h1 {
@@ -598,20 +590,53 @@ main {
   background: var(--paper);
 }
 
-.guide-panel {
+.guide-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  display: grid;
+  place-items: center;
+  padding: clamp(14px, 3vw, 40px);
+  background: rgba(5, 5, 5, 0.72);
+}
+
+.guide-modal {
+  position: relative;
   display: grid;
   gap: 14px;
-  margin-top: 18px;
+  width: min(1120px, 100%);
+  max-height: min(760px, calc(100vh - 32px));
+  overflow: auto;
   padding: 14px;
   border: 3px solid var(--line);
   background: var(--paper-2);
   box-shadow: 8px 8px 0 var(--void);
 }
 
+.modal-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 2;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 3px solid var(--paper-2);
+  background: var(--acid);
+  color: var(--void);
+}
+
+.modal-close:hover {
+  background: var(--blue);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--void);
+}
+
 .guide-heading {
   display: grid;
   gap: 8px;
-  padding: 16px;
+  padding: 18px 72px 18px 16px;
   border: 3px solid var(--line);
   background: var(--void);
   color: var(--paper-2);
@@ -636,7 +661,7 @@ main {
   margin: 0;
   color: var(--paper-2);
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  font-size: clamp(2rem, 5vw, 4.6rem);
   font-weight: 950;
   line-height: 0.9;
   text-transform: uppercase;
@@ -1236,7 +1261,17 @@ main {
 
 @media (max-width: 900px) {
   .source-nav {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .source-nav a {
     display: none;
+  }
+
+  .source-nav button {
+    padding: 9px 10px;
+    border-color: var(--paper-2);
   }
 
   .control-panel {
@@ -1253,6 +1288,10 @@ main {
 
   .reader-actions {
     justify-content: flex-start;
+  }
+
+  .guide-modal {
+    width: min(680px, 100%);
   }
 
   .guide-grid {
@@ -1282,8 +1321,9 @@ main {
   }
 
   .hero-band::after {
-    width: 58vw;
-    height: 88px;
+    top: 26px;
+    width: 82vw;
+    height: 44px;
   }
 
   .hero-band::before {
@@ -1323,6 +1363,31 @@ main {
 
   .hero-pixels span:nth-child(n + 6) {
     display: none;
+  }
+
+  .guide-modal-backdrop {
+    align-items: start;
+    padding: 12px 8px;
+  }
+
+  .guide-modal {
+    max-height: calc(100vh - 24px);
+    padding: 12px;
+  }
+
+  .guide-heading {
+    padding: 16px 58px 16px 14px;
+  }
+
+  .guide-heading h2 {
+    font-size: clamp(2rem, 12vw, 3.2rem);
+  }
+
+  .modal-close {
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
   }
 
   .source-strip {

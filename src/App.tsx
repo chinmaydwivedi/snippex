@@ -9,6 +9,7 @@ import {
   faMagnifyingGlass,
   faStar,
   faWandMagicSparkles,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,7 +33,6 @@ const snippetFormats: { value: SnippetFormat; label: string; copyLabel: string }
 const headlineLinks = [
   { label: "Templates", href: "#templates" },
   { label: "Packs", href: "#sources" },
-  { label: "Guide", href: "#guide" },
   { label: "Library", href: "#library" },
 ];
 
@@ -137,6 +137,7 @@ function App() {
   const [saved, setSaved] = useState<Set<string>>(() => readSavedTemplates());
   const [onlySaved, setOnlySaved] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const transitionTimers = useRef<number[]>([]);
 
   const sourceOptions = useMemo(
@@ -195,6 +196,23 @@ function App() {
       transitionTimers.current.forEach((timer) => window.clearTimeout(timer));
     };
   }, []);
+
+  useEffect(() => {
+    if (!isGuideOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsGuideOpen(false);
+    }
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isGuideOpen]);
 
   async function copyTemplate(item: TemplateItem) {
     await navigator.clipboard.writeText(formatTemplate(item, snippetFormat));
@@ -266,8 +284,80 @@ function App() {
               {item.label}
             </a>
           ))}
+          <button
+            type="button"
+            onClick={() => setIsGuideOpen(true)}
+            aria-label="Open editor guide"
+            title="Open editor guide"
+          >
+            Guide
+          </button>
         </nav>
       </header>
+
+      {isGuideOpen ? (
+        <div className="guide-modal-backdrop" role="presentation" onMouseDown={() => setIsGuideOpen(false)}>
+          <section
+            className="guide-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="guide-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="modal-close"
+              onClick={() => setIsGuideOpen(false)}
+              aria-label="Close guide"
+              title="Close guide"
+            >
+              <Icon icon={faXmark} size={18} />
+            </button>
+
+            <div className="guide-heading">
+              <span>
+                <Icon icon={faBookOpen} size={17} />
+                Editor Guide
+              </span>
+              <h2 id="guide-title">Add Snippex Templates To Your Editor</h2>
+            </div>
+
+            <div className="guide-grid">
+              <article className="guide-card">
+                <div className="guide-card-head">
+                  <Icon icon={faCode} size={20} />
+                  <h3>VS Code</h3>
+                </div>
+                <ol>
+                  <li>Select a template and set the format to VS Code JSON.</li>
+                  <li>Copy JSON, then open Configure User Snippets.</li>
+                  <li>Choose cpp.json and paste the snippet object inside the outer braces.</li>
+                  <li>Type the trigger in a C++ file and press Tab.</li>
+                </ol>
+              </article>
+
+              <article className="guide-card">
+                <div className="guide-card-head">
+                  <Icon icon={faClipboard} size={20} />
+                  <h3>Sublime Text</h3>
+                </div>
+                <ol>
+                  <li>Select a template and set the format to Sublime.</li>
+                  <li>Copy Sublime, then open Tools, Developer, New Snippet.</li>
+                  <li>Replace the file contents with the copied snippet.</li>
+                  <li>Save it in Packages/User with a .sublime-snippet name.</li>
+                </ol>
+              </article>
+
+              <aside className="guide-current" aria-label="Current snippet trigger">
+                <span>Current Trigger</span>
+                <strong>{snippetTrigger(selected)}</strong>
+                <p>{selected.title}</p>
+              </aside>
+            </div>
+          </section>
+        </div>
+      ) : null}
 
       <main>
         <section className="hero-band" id="templates" aria-labelledby="page-title">
@@ -365,50 +455,6 @@ function App() {
               <span className="pack-meta">{item.count} templates</span>
             </button>
           ))}
-        </section>
-
-        <section className="guide-panel" id="guide" aria-labelledby="guide-title">
-          <div className="guide-heading">
-            <span>
-              <Icon icon={faBookOpen} size={17} />
-              Editor Guide
-            </span>
-            <h2 id="guide-title">Add Snippex Templates To Your Editor</h2>
-          </div>
-
-          <div className="guide-grid">
-            <article className="guide-card">
-              <div className="guide-card-head">
-                <Icon icon={faCode} size={20} />
-                <h3>VS Code</h3>
-              </div>
-              <ol>
-                <li>Select a template and set the format to VS Code JSON.</li>
-                <li>Copy JSON, then open Configure User Snippets.</li>
-                <li>Choose cpp.json and paste the snippet object inside the outer braces.</li>
-                <li>Type the trigger in a C++ file and press Tab.</li>
-              </ol>
-            </article>
-
-            <article className="guide-card">
-              <div className="guide-card-head">
-                <Icon icon={faClipboard} size={20} />
-                <h3>Sublime Text</h3>
-              </div>
-              <ol>
-                <li>Select a template and set the format to Sublime.</li>
-                <li>Copy Sublime, then open Tools, Developer, New Snippet.</li>
-                <li>Replace the file contents with the copied snippet.</li>
-                <li>Save it in Packages/User with a .sublime-snippet name.</li>
-              </ol>
-            </article>
-
-            <aside className="guide-current" aria-label="Current snippet trigger">
-              <span>Current Trigger</span>
-              <strong>{snippetTrigger(selected)}</strong>
-              <p>{selected.title}</p>
-            </aside>
-          </div>
         </section>
 
         <section className="workspace" id="library" aria-label="Template browser">
