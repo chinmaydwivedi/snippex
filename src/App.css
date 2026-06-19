@@ -295,8 +295,7 @@ main {
 }
 
 .hero-pixels span:nth-child(7) {
-  bottom: 15%;
-  left: 43%;
+  display: none;
 }
 
 .hero-pixels span:nth-child(8) {
@@ -315,15 +314,6 @@ main {
 
 .hero-pixels span:nth-child(n + 10) {
   display: none;
-}
-
-.hero-pixels span:nth-child(10) {
-  top: 12%;
-  right: 31%;
-  display: block;
-  width: 58px;
-  height: 58px;
-  background: var(--paper-2);
 }
 
 .hero-copy,
