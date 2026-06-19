@@ -1,0 +1,16 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(240, 176, 113, 0.35);
+  color: #fffaf1;
+}
+
+#root {
+  min-height: 100vh;
+}
