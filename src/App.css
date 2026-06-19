@@ -230,13 +230,13 @@ main {
 
 .hero-band::after {
   position: absolute;
-  top: clamp(44px, 4.2vw, 58px);
+  top: 0;
   left: 0;
-  width: clamp(340px, 30vw, 480px);
-  height: 58px;
+  width: clamp(500px, 45vw, 690px);
+  height: 118px;
   content: "";
   background: var(--void);
-  clip-path: polygon(0 0, 100% 0, 100% 74%, 82% 74%, 82% 100%, 0 100%);
+  clip-path: polygon(0 0, 78% 0, 78% 52%, 92% 52%, 92% 74%, 58% 74%, 58% 100%, 0 100%);
 }
 
 .hero-pixels {
